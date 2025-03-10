@@ -1491,7 +1491,7 @@ service:
 externalAccess:
   ## @param externalAccess.enabled Enable Kubernetes external cluster access to Kafka brokers
   ##
-  enabled: false
+  enabled: true
   ## External IPs auto-discovery configuration
   ## An init container is used to auto-detect LB IPs or node ports by querying the K8s API
   ## Note: RBAC might be required
@@ -1499,7 +1499,7 @@ externalAccess:
   autoDiscovery:
     ## @param externalAccess.autoDiscovery.enabled Enable using an init container to auto-detect external IPs/ports by querying the K8s API
     ##
-    enabled: false
+    enabled: true
     ## Bitnami Kubectl image
     ## ref: https://hub.docker.com/r/bitnami/kubectl/tags/
     ## @param externalAccess.autoDiscovery.image.registry [default: REGISTRY_NAME] Init container auto-discovery image registry
@@ -1583,11 +1583,11 @@ externalAccess:
     service:
       ## @param externalAccess.controller.service.type Kubernetes Service type for external access. It can be NodePort, LoadBalancer or ClusterIP
       ##
-      type: LoadBalancer
+      type: NodePort
       ## @param externalAccess.controller.service.ports.external Kafka port used for external access when service type is LoadBalancer
       ##
       ports:
-        external: 9094
+        external: 9095
       ## @param externalAccess.controller.service.loadBalancerClass Kubernetes Service Load Balancer class for external access when service type is LoadBalancer
       ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#load-balancer-class
       ##
@@ -1630,12 +1630,10 @@ externalAccess:
       ##   - 30001
       ##   - 30002
       ##
-      nodePorts: []
-      ## @param externalAccess.controller.service.externalIPs Use distinct service host IPs to configure Kafka external listener when service type is NodePort. Length must be the same as replicaCount
-      ## e.g:
-      ## externalIPs:
-      ##   - X.X.X.X
-      ##   - Y.Y.Y.Y
+      nodePorts:
+        - 31092  # Node port for broker 0
+        - 31093  # Node port for broker 1
+        - 31094
       ##
       externalIPs: []
       ## @param externalAccess.controller.service.useHostIPs Use service host IPs to configure Kafka external listener when service type is NodePort
